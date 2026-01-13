@@ -278,17 +278,35 @@
             
             const data = await response.json();
             
-            if (data.success) {
+            if (data.success && data.result) {
                 const videoData = data.result;
-                const downloadUrl = format === 'mp3' ? videoData.mp3 : videoData.download_url;
+                
+                // Ambil download URL sesuai format
+                let downloadUrl;
+                let title = 'Video YouTube';
+                
+                if (format === 'mp3') {
+                    downloadUrl = videoData.mp3;
+                    title = videoData.title || 'Audio MP3';
+                } else {
+                    downloadUrl = videoData.download_url;
+                    title = 'Video MP4';
+                }
+                
+                // Validasi apakah download URL ada
+                if (!downloadUrl) {
+                    error.textContent = '❌ Link download tidak tersedia. Silakan coba lagi.';
+                    error.classList.add('show');
+                    return;
+                }
                 
                 result.innerHTML = `
                     <div style="text-align: center; margin-bottom: 20px;">
                         <i class="fas fa-check-circle" style="font-size: 3em; color: #10b981; margin-bottom: 15px;"></i>
                         <h3 style="color: #f1f5f9; margin-bottom: 10px;">Download Ready!</h3>
-                        <p style="color: #94a3b8;">${videoData.title || 'Video berhasil diproses'}</p>
+                        <p style="color: #94a3b8; word-wrap: break-word;">${title}</p>
                     </div>
-                    <a href="${downloadUrl}" class="download-btn" download style="display: flex; align-items: center; justify-content: center; gap: 10px;">
+                    <a href="${downloadUrl}" class="download-btn" target="_blank" style="display: flex; align-items: center; justify-content: center; gap: 10px;">
                         <i class="fas fa-download"></i>
                         <span>Download ${format.toUpperCase()}</span>
                     </a>
@@ -296,10 +314,11 @@
                 
                 result.classList.add('show');
             } else {
-                error.textContent = '❌ ' + data.message;
+                error.textContent = '❌ ' + (data.message || 'Gagal mengambil data video');
                 error.classList.add('show');
             }
         } catch (err) {
+            console.error('Error:', err);
             error.textContent = '❌ Terjadi kesalahan: ' + err.message;
             error.classList.add('show');
         } finally {
