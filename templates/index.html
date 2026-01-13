@@ -1,0 +1,739 @@
+<!-- templates/index.html -->
+{% extends "base.html" %}
+
+{% block title %}Home - MediaDown Futuristic{% endblock %}
+
+{% block content %}
+<div class="hero-futuristic">
+    <div class="hero-glow"></div>
+    <div class="hero-grid"></div>
+    <div class="hero-content">
+        <div class="hero-badge">
+            <i class="fas fa-bolt"></i>
+            <span>POWERED BY AI</span>
+        </div>
+        <h1 class="hero-title-big">
+            <span class="glitch" data-text="MediaDown">MediaDown</span>
+        </h1>
+        <p class="hero-desc">Next-Generation Media Downloader dengan teknologi terdepan untuk semua platform social media</p>
+        
+        <div class="hero-features">
+            <div class="feature-chip">
+                <i class="fas fa-shield-check"></i>
+                <span>100% Secure</span>
+            </div>
+            <div class="feature-chip">
+                <i class="fas fa-zap"></i>
+                <span>Lightning Fast</span>
+            </div>
+            <div class="feature-chip">
+                <i class="fas fa-hdd"></i>
+                <span>HD Quality</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="platforms-section">
+    <div class="section-header">
+        <h2 class="section-title">
+            <span class="title-line"></span>
+            <span>SUPPORTED PLATFORMS</span>
+            <span class="title-line"></span>
+        </h2>
+        <p class="section-subtitle">Pilih platform dan mulai download dalam hitungan detik</p>
+    </div>
+
+    <div class="platforms-grid-futuristic">
+        <a href="/youtube" class="platform-card-futuristic" data-platform="youtube">
+            <div class="card-border"></div>
+            <div class="card-shine"></div>
+            <div class="card-content">
+                <div class="platform-icon-futuristic">
+                    <i class="fab fa-youtube"></i>
+                    <div class="icon-pulse"></div>
+                </div>
+                <h3>YouTube</h3>
+                <p>MP3 & MP4 Downloads</p>
+                <div class="card-stats">
+                    <span><i class="fas fa-check-circle"></i> Video & Audio</span>
+                </div>
+            </div>
+            <div class="card-hover-effect"></div>
+        </a>
+
+        <a href="/tiktok" class="platform-card-futuristic" data-platform="tiktok">
+            <div class="card-border"></div>
+            <div class="card-shine"></div>
+            <div class="card-content">
+                <div class="platform-icon-futuristic">
+                    <i class="fab fa-tiktok"></i>
+                    <div class="icon-pulse"></div>
+                </div>
+                <h3>TikTok</h3>
+                <p>No Watermark Videos</p>
+                <div class="card-stats">
+                    <span><i class="fas fa-check-circle"></i> HD Quality</span>
+                </div>
+            </div>
+            <div class="card-hover-effect"></div>
+        </a>
+
+        <a href="/facebook" class="platform-card-futuristic" data-platform="facebook">
+            <div class="card-border"></div>
+            <div class="card-shine"></div>
+            <div class="card-content">
+                <div class="platform-icon-futuristic">
+                    <i class="fab fa-facebook"></i>
+                    <div class="icon-pulse"></div>
+                </div>
+                <h3>Facebook</h3>
+                <p>HD & SD Videos</p>
+                <div class="card-stats">
+                    <span><i class="fas fa-check-circle"></i> Multi Quality</span>
+                </div>
+            </div>
+            <div class="card-hover-effect"></div>
+        </a>
+
+        <a href="/instagram" class="platform-card-futuristic" data-platform="instagram">
+            <div class="card-border"></div>
+            <div class="card-shine"></div>
+            <div class="card-content">
+                <div class="platform-icon-futuristic">
+                    <i class="fab fa-instagram"></i>
+                    <div class="icon-pulse"></div>
+                </div>
+                <h3>Instagram</h3>
+                <p>Photos & Videos</p>
+                <div class="card-stats">
+                    <span><i class="fas fa-check-circle"></i> Stories & Reels</span>
+                </div>
+            </div>
+            <div class="card-hover-effect"></div>
+        </a>
+
+        <a href="/twitter" class="platform-card-futuristic" data-platform="twitter">
+            <div class="card-border"></div>
+            <div class="card-shine"></div>
+            <div class="card-content">
+                <div class="platform-icon-futuristic">
+                    <i class="fab fa-twitter"></i>
+                    <div class="icon-pulse"></div>
+                </div>
+                <h3>Twitter/X</h3>
+                <p>Videos & GIFs</p>
+                <div class="card-stats">
+                    <span><i class="fas fa-check-circle"></i> All Formats</span>
+                </div>
+            </div>
+            <div class="card-hover-effect"></div>
+        </a>
+
+        <a href="/spotify" class="platform-card-futuristic" data-platform="spotify">
+            <div class="card-border"></div>
+            <div class="card-shine"></div>
+            <div class="card-content">
+                <div class="platform-icon-futuristic">
+                    <i class="fab fa-spotify"></i>
+                    <div class="icon-pulse"></div>
+                </div>
+                <h3>Spotify</h3>
+                <p>Track Information</p>
+                <div class="card-stats">
+                    <span><i class="fas fa-check-circle"></i> Metadata</span>
+                </div>
+            </div>
+            <div class="card-hover-effect"></div>
+        </a>
+    </div>
+</div>
+
+<div class="tech-section">
+    <div class="tech-grid">
+        <div class="tech-card">
+            <div class="tech-icon">
+                <i class="fas fa-rocket"></i>
+            </div>
+            <h3>Ultra Fast Processing</h3>
+            <p>Download dalam hitungan detik dengan teknologi acceleration terbaru</p>
+        </div>
+        
+        <div class="tech-card">
+            <div class="tech-icon">
+                <i class="fas fa-lock"></i>
+            </div>
+            <h3>Military-Grade Security</h3>
+            <p>Enkripsi end-to-end untuk keamanan data maksimal</p>
+        </div>
+        
+        <div class="tech-card">
+            <div class="tech-icon">
+                <i class="fas fa-server"></i>
+            </div>
+            <h3>Cloud Infrastructure</h3>
+            <p>Server global untuk kecepatan download optimal</p>
+        </div>
+    </div>
+</div>
+
+<div class="guide-section">
+    <div class="guide-header">
+        <div class="guide-icon">
+            <i class="fas fa-terminal"></i>
+        </div>
+        <h2>QUICK START GUIDE</h2>
+    </div>
+    
+    <div class="guide-timeline">
+        <div class="timeline-item">
+            <div class="timeline-marker">
+                <span>01</span>
+                <div class="marker-glow"></div>
+            </div>
+            <div class="timeline-content">
+                <h4>SELECT PLATFORM</h4>
+                <p>Pilih platform media yang ingin Anda gunakan</p>
+            </div>
+        </div>
+        
+        <div class="timeline-connector"></div>
+        
+        <div class="timeline-item">
+            <div class="timeline-marker">
+                <span>02</span>
+                <div class="marker-glow"></div>
+            </div>
+            <div class="timeline-content">
+                <h4>PASTE URL</h4>
+                <p>Copy dan paste link video/musik ke input field</p>
+            </div>
+        </div>
+        
+        <div class="timeline-connector"></div>
+        
+        <div class="timeline-item">
+            <div class="timeline-marker">
+                <span>03</span>
+                <div class="marker-glow"></div>
+            </div>
+            <div class="timeline-content">
+                <h4>DOWNLOAD</h4>
+                <p>Klik tombol download dan file siap digunakan</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_style %}
+<style>
+    .card {
+        background: transparent;
+        border: none;
+        box-shadow: none;
+        padding: 0;
+    }
+    
+    .card::before {
+        display: none;
+    }
+
+    /* Hero Futuristic */
+    .hero-futuristic {
+        position: relative;
+        padding: 80px 40px;
+        margin-bottom: 80px;
+        border-radius: 24px;
+        overflow: hidden;
+        background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.1) 50%, rgba(236, 72, 153, 0.1) 100%);
+        border: 1px solid rgba(99, 102, 241, 0.2);
+    }
+    
+    .hero-glow {
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(99, 102, 241, 0.3) 0%, transparent 70%);
+        animation: heroRotate 20s linear infinite;
+    }
+    
+    @keyframes heroRotate {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
+    
+    .hero-grid {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: 
+            linear-gradient(rgba(99, 102, 241, 0.1) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(99, 102, 241, 0.1) 1px, transparent 1px);
+        background-size: 50px 50px;
+        opacity: 0.3;
+    }
+    
+    .hero-content {
+        position: relative;
+        z-index: 1;
+        text-align: center;
+    }
+    
+    .hero-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 20px;
+        background: rgba(99, 102, 241, 0.2);
+        border: 1px solid rgba(99, 102, 241, 0.3);
+        border-radius: 20px;
+        font-size: 0.75em;
+        font-weight: 700;
+        color: #a5b4fc;
+        margin-bottom: 30px;
+        letter-spacing: 2px;
+    }
+    
+    .hero-title-big {
+        font-size: 5em;
+        font-weight: 900;
+        margin-bottom: 20px;
+        background: linear-gradient(135deg, #6366f1, #8b5cf6, #ec4899);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        filter: drop-shadow(0 0 30px rgba(99, 102, 241, 0.5));
+    }
+    
+    .glitch {
+        position: relative;
+        display: inline-block;
+    }
+    
+    .hero-desc {
+        font-size: 1.2em;
+        color: #94a3b8;
+        max-width: 700px;
+        margin: 0 auto 40px;
+        line-height: 1.8;
+    }
+    
+    .hero-features {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        flex-wrap: wrap;
+    }
+    
+    .feature-chip {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 24px;
+        background: rgba(30, 41, 59, 0.6);
+        border: 1px solid rgba(99, 102, 241, 0.3);
+        border-radius: 12px;
+        color: #e2e8f0;
+        font-weight: 600;
+        transition: all 0.3s;
+    }
+    
+    .feature-chip:hover {
+        background: rgba(99, 102, 241, 0.2);
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(99, 102, 241, 0.3);
+    }
+    
+    .feature-chip i {
+        color: #6366f1;
+    }
+
+    /* Section Header */
+    .section-header {
+        text-align: center;
+        margin-bottom: 60px;
+    }
+    
+    .section-title {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 20px;
+        font-size: 2em;
+        font-weight: 800;
+        color: #f1f5f9;
+        margin-bottom: 15px;
+        letter-spacing: 3px;
+    }
+    
+    .title-line {
+        width: 60px;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, #6366f1, transparent);
+    }
+    
+    .section-subtitle {
+        color: #94a3b8;
+        font-size: 1.1em;
+    }
+
+    /* Platforms Grid Futuristic */
+    .platforms-section {
+        margin-bottom: 80px;
+    }
+    
+    .platforms-grid-futuristic {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 30px;
+    }
+    
+    .platform-card-futuristic {
+        position: relative;
+        padding: 35px;
+        background: rgba(30, 41, 59, 0.4);
+        border-radius: 20px;
+        text-decoration: none;
+        overflow: hidden;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    
+    .card-border {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border: 1px solid rgba(99, 102, 241, 0.2);
+        border-radius: 20px;
+        transition: all 0.3s;
+    }
+    
+    .platform-card-futuristic:hover .card-border {
+        border-color: rgba(99, 102, 241, 0.5);
+        box-shadow: 0 0 30px rgba(99, 102, 241, 0.3);
+    }
+    
+    .card-shine {
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.03), transparent);
+        transform: rotate(45deg);
+        transition: all 0.6s;
+    }
+    
+    .platform-card-futuristic:hover .card-shine {
+        left: 100%;
+    }
+    
+    .card-content {
+        position: relative;
+        z-index: 1;
+        text-align: center;
+    }
+    
+    .platform-icon-futuristic {
+        position: relative;
+        font-size: 4em;
+        margin-bottom: 20px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .icon-pulse {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        background: currentColor;
+        opacity: 0.2;
+        animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+        0%, 100% {
+            transform: scale(1);
+            opacity: 0.2;
+        }
+        50% {
+            transform: scale(1.3);
+            opacity: 0;
+        }
+    }
+    
+    .platform-card-futuristic[data-platform="youtube"] .platform-icon-futuristic { color: #ff0000; }
+    .platform-card-futuristic[data-platform="tiktok"] .platform-icon-futuristic { color: #ee0979; }
+    .platform-card-futuristic[data-platform="facebook"] .platform-icon-futuristic { color: #1877f2; }
+    .platform-card-futuristic[data-platform="instagram"] .platform-icon-futuristic { color: #833ab4; }
+    .platform-card-futuristic[data-platform="twitter"] .platform-icon-futuristic { color: #1da1f2; }
+    .platform-card-futuristic[data-platform="spotify"] .platform-icon-futuristic { color: #1db954; }
+    
+    .platform-card-futuristic h3 {
+        font-size: 1.5em;
+        color: #f1f5f9;
+        margin-bottom: 10px;
+        font-weight: 700;
+    }
+    
+    .platform-card-futuristic p {
+        color: #94a3b8;
+        margin-bottom: 20px;
+    }
+    
+    .card-stats {
+        font-size: 0.85em;
+        color: #6366f1;
+        font-weight: 600;
+    }
+    
+    .card-stats i {
+        margin-right: 5px;
+    }
+    
+    .card-hover-effect {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 3px;
+        background: linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899);
+        transform: scaleX(0);
+        transition: transform 0.4s;
+    }
+    
+    .platform-card-futuristic:hover .card-hover-effect {
+        transform: scaleX(1);
+    }
+    
+    .platform-card-futuristic:hover {
+        transform: translateY(-10px);
+        background: rgba(30, 41, 59, 0.6);
+    }
+
+    /* Tech Section */
+    .tech-section {
+        margin-bottom: 80px;
+    }
+    
+    .tech-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 30px;
+    }
+    
+    .tech-card {
+        padding: 40px 30px;
+        background: rgba(30, 41, 59, 0.4);
+        border: 1px solid rgba(99, 102, 241, 0.2);
+        border-radius: 20px;
+        text-align: center;
+        transition: all 0.3s;
+    }
+    
+    .tech-card:hover {
+        transform: translateY(-5px);
+        border-color: rgba(99, 102, 241, 0.5);
+        box-shadow: 0 20px 40px rgba(99, 102, 241, 0.2);
+    }
+    
+    .tech-icon {
+        width: 80px;
+        height: 80px;
+        margin: 0 auto 25px;
+        background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(139, 92, 246, 0.2));
+        border: 1px solid rgba(99, 102, 241, 0.3);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.5em;
+        color: #6366f1;
+    }
+    
+    .tech-card h3 {
+        font-size: 1.3em;
+        color: #f1f5f9;
+        margin-bottom: 15px;
+        font-weight: 700;
+    }
+    
+    .tech-card p {
+        color: #94a3b8;
+        line-height: 1.6;
+    }
+
+    /* Guide Section */
+    .guide-section {
+        padding: 60px 40px;
+        background: rgba(30, 41, 59, 0.4);
+        border: 1px solid rgba(99, 102, 241, 0.2);
+        border-radius: 24px;
+    }
+    
+    .guide-header {
+        text-align: center;
+        margin-bottom: 60px;
+    }
+    
+    .guide-icon {
+        width: 80px;
+        height: 80px;
+        margin: 0 auto 20px;
+        background: linear-gradient(135deg, #6366f1, #8b5cf6);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2em;
+        color: white;
+        box-shadow: 0 10px 30px rgba(99, 102, 241, 0.4);
+    }
+    
+    .guide-header h2 {
+        font-size: 2em;
+        font-weight: 800;
+        color: #f1f5f9;
+        letter-spacing: 3px;
+    }
+    
+    .guide-timeline {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        max-width: 1000px;
+        margin: 0 auto;
+    }
+    
+    .timeline-item {
+        flex: 1;
+        text-align: center;
+    }
+    
+    .timeline-marker {
+        position: relative;
+        width: 80px;
+        height: 80px;
+        margin: 0 auto 20px;
+        background: rgba(30, 41, 59, 0.6);
+        border: 2px solid #6366f1;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.8em;
+        font-weight: 800;
+        color: #6366f1;
+    }
+    
+    .marker-glow {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        background: #6366f1;
+        opacity: 0.3;
+        animation: markerPulse 2s infinite;
+    }
+    
+    @keyframes markerPulse {
+        0%, 100% {
+            transform: scale(1);
+            opacity: 0.3;
+        }
+        50% {
+            transform: scale(1.2);
+            opacity: 0;
+        }
+    }
+    
+    .timeline-content h4 {
+        font-size: 1.2em;
+        color: #f1f5f9;
+        margin-bottom: 10px;
+        font-weight: 700;
+        letter-spacing: 1px;
+    }
+    
+    .timeline-content p {
+        color: #94a3b8;
+        font-size: 0.95em;
+    }
+    
+    .timeline-connector {
+        flex: 0.5;
+        height: 2px;
+        background: linear-gradient(90deg, #6366f1, #8b5cf6);
+        position: relative;
+    }
+    
+    .timeline-connector::before {
+        content: '';
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, #6366f1, transparent);
+        animation: connectorFlow 2s infinite;
+    }
+    
+    @keyframes connectorFlow {
+        0% {
+            transform: translateX(-100%);
+        }
+        100% {
+            transform: translateX(100%);
+        }
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .hero-title-big {
+            font-size: 3em;
+        }
+        
+        .hero-futuristic {
+            padding: 60px 20px;
+        }
+        
+        .platforms-grid-futuristic {
+            grid-template-columns: 1fr;
+        }
+        
+        .guide-timeline {
+            flex-direction: column;
+            gap: 30px;
+        }
+        
+        .timeline-connector {
+            flex: none;
+            width: 2px;
+            height: 50px;
+            background: linear-gradient(180deg, #6366f1, #8b5cf6);
+        }
+        
+        .timeline-connector::before {
+            animation: connectorFlowVertical 2s infinite;
+        }
+        
+        @keyframes connectorFlowVertical {
+            0% {
+                transform: translateY(-100%);
+            }
+            100% {
+                transform: translateY(100%);
+            }
+        }
+        
+        .guide-section {
+            padding: 40px 20px;
+        }
+    }
+</style>
+{% endblock %}

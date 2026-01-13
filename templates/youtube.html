@@ -1,0 +1,316 @@
+<!-- templates/youtube.html -->
+{% extends "base.html" %}
+
+{% block title %}YouTube Downloader{% endblock %}
+
+{% block bg_gradient %}linear-gradient(135deg, #ff0000 0%, #cc0000 100%){% endblock %}
+{% block input_focus_color %}#ff0000{% endblock %}
+{% block button_bg %}linear-gradient(135deg, #ff0000 0%, #cc0000 100%){% endblock %}
+
+{% block content %}
+<div class="platform-header">
+    <div class="platform-icon-large">
+        <i class="fab fa-youtube"></i>
+        <div class="icon-glow-red"></div>
+    </div>
+    <h1><i class="fab fa-youtube"></i> YouTube Downloader</h1>
+    <p class="subtitle">Download YouTube dalam format MP3 atau MP4</p>
+</div>
+
+<div class="download-interface">
+    <div class="input-group">
+        <label for="youtubeUrl"><i class="fas fa-link"></i> URL YouTube</label>
+        <input type="text" id="youtubeUrl" placeholder="https://www.youtube.com/watch?v=..." />
+    </div>
+
+    <div class="button-grid">
+        <button id="downloadMp3Btn" onclick="downloadYoutube('mp3')" class="format-btn">
+            <i class="fas fa-music"></i>
+            <span>Download MP3</span>
+            <small>Audio Only</small>
+        </button>
+        <button id="downloadMp4Btn" onclick="downloadYoutube('mp4')" class="format-btn">
+            <i class="fas fa-video"></i>
+            <span>Download MP4</span>
+            <small>Video + Audio</small>
+        </button>
+    </div>
+</div>
+
+<div class="loader" id="loader"></div>
+<div class="error" id="error"></div>
+<div class="result" id="result"></div>
+
+<div class="tips-box">
+    <div class="tips-header">
+        <i class="fas fa-lightbulb"></i>
+        <h3>Quick Guide</h3>
+    </div>
+    <ul class="tips-list">
+        <li><i class="fas fa-check-circle"></i> Buka YouTube dan cari video</li>
+        <li><i class="fas fa-check-circle"></i> Copy URL dari address bar</li>
+        <li><i class="fas fa-check-circle"></i> Paste URL di form di atas</li>
+        <li><i class="fas fa-check-circle"></i> Pilih format MP3 atau MP4</li>
+    </ul>
+    <div class="tips-note">
+        <i class="fas fa-info-circle"></i>
+        Download hanya untuk penggunaan pribadi
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_style %}
+<style>
+    .platform-header {
+        text-align: center;
+        margin-bottom: 40px;
+        position: relative;
+    }
+    
+    .platform-icon-large {
+        position: relative;
+        display: inline-block;
+        margin-bottom: 20px;
+    }
+    
+    .platform-icon-large i {
+        font-size: 5em;
+        color: #ff0000;
+        filter: drop-shadow(0 0 20px rgba(255, 0, 0, 0.5));
+        animation: iconFloat 3s ease-in-out infinite;
+    }
+    
+    .icon-glow-red {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 100px;
+        height: 100px;
+        background: radial-gradient(circle, rgba(255, 0, 0, 0.3), transparent);
+        border-radius: 50%;
+        animation: pulse 2s infinite;
+    }
+    
+    @keyframes iconFloat {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-10px); }
+    }
+    
+    .download-interface {
+        margin-bottom: 40px;
+    }
+    
+    .button-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+        margin-top: 20px;
+    }
+    
+    .format-btn {
+        padding: 25px 20px;
+        background: rgba(30, 41, 59, 0.4);
+        border: 1px solid rgba(255, 0, 0, 0.3);
+        border-radius: 16px;
+        color: #e2e8f0;
+        cursor: pointer;
+        transition: all 0.3s;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .format-btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 0, 0, 0.2), transparent);
+        transition: left 0.5s;
+    }
+    
+    .format-btn:hover::before {
+        left: 100%;
+    }
+    
+    .format-btn:hover {
+        border-color: #ff0000;
+        box-shadow: 0 0 30px rgba(255, 0, 0, 0.3);
+        transform: translateY(-5px);
+    }
+    
+    .format-btn i {
+        font-size: 2.5em;
+        color: #ff0000;
+    }
+    
+    .format-btn span {
+        font-size: 1.1em;
+        font-weight: 700;
+    }
+    
+    .format-btn small {
+        font-size: 0.85em;
+        color: #94a3b8;
+    }
+    
+    .format-btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        transform: none;
+    }
+    
+    .tips-box {
+        background: rgba(30, 41, 59, 0.4);
+        border: 1px solid rgba(99, 102, 241, 0.2);
+        border-radius: 20px;
+        padding: 30px;
+    }
+    
+    .tips-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 20px;
+    }
+    
+    .tips-header i {
+        font-size: 1.8em;
+        color: #fbbf24;
+    }
+    
+    .tips-header h3 {
+        font-size: 1.3em;
+        color: #f1f5f9;
+        margin: 0;
+    }
+    
+    .tips-list {
+        list-style: none;
+        padding: 0;
+        margin-bottom: 20px;
+    }
+    
+    .tips-list li {
+        padding: 12px 0;
+        color: #94a3b8;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-size: 0.95em;
+    }
+    
+    .tips-list i {
+        color: #10b981;
+        font-size: 1.1em;
+    }
+    
+    .tips-note {
+        background: rgba(251, 191, 36, 0.1);
+        border-left: 3px solid #fbbf24;
+        padding: 15px;
+        border-radius: 8px;
+        color: #fbbf24;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .tips-note i {
+        font-size: 1.2em;
+    }
+    
+    @media (max-width: 768px) {
+        .button-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .platform-icon-large i {
+            font-size: 4em;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block extra_script %}
+<script>
+    async function downloadYoutube(format) {
+        const url = document.getElementById('youtubeUrl').value.trim();
+        const mp3Btn = document.getElementById('downloadMp3Btn');
+        const mp4Btn = document.getElementById('downloadMp4Btn');
+        const loader = document.getElementById('loader');
+        const error = document.getElementById('error');
+        const result = document.getElementById('result');
+        
+        error.classList.remove('show');
+        result.classList.remove('show');
+        
+        if (!url) {
+            error.textContent = '⚠️ Mohon masukkan URL YouTube!';
+            error.classList.add('show');
+            return;
+        }
+        
+        if (!url.includes('youtube.com/') && !url.includes('youtu.be/')) {
+            error.textContent = '⚠️ URL YouTube tidak valid!';
+            error.classList.add('show');
+            return;
+        }
+        
+        mp3Btn.disabled = true;
+        mp4Btn.disabled = true;
+        loader.classList.add('show');
+        
+        try {
+            const endpoint = format === 'mp3' ? '/api/download/ytmp3' : '/api/download/ytmp4';
+            
+            const response = await fetch(endpoint, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ url: url })
+            });
+            
+            const data = await response.json();
+            
+            if (data.success) {
+                const videoData = data.result;
+                const downloadUrl = format === 'mp3' ? videoData.mp3 : videoData.download_url;
+                
+                result.innerHTML = `
+                    <div style="text-align: center; margin-bottom: 20px;">
+                        <i class="fas fa-check-circle" style="font-size: 3em; color: #10b981; margin-bottom: 15px;"></i>
+                        <h3 style="color: #f1f5f9; margin-bottom: 10px;">Download Ready!</h3>
+                        <p style="color: #94a3b8;">${videoData.title || 'Video berhasil diproses'}</p>
+                    </div>
+                    <a href="${downloadUrl}" class="download-btn" download style="display: flex; align-items: center; justify-content: center; gap: 10px;">
+                        <i class="fas fa-download"></i>
+                        <span>Download ${format.toUpperCase()}</span>
+                    </a>
+                `;
+                
+                result.classList.add('show');
+            } else {
+                error.textContent = '❌ ' + data.message;
+                error.classList.add('show');
+            }
+        } catch (err) {
+            error.textContent = '❌ Terjadi kesalahan: ' + err.message;
+            error.classList.add('show');
+        } finally {
+            mp3Btn.disabled = false;
+            mp4Btn.disabled = false;
+            loader.classList.remove('show');
+        }
+    }
+    
+    document.getElementById('youtubeUrl').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') downloadYoutube('mp3');
+    });
+</script>
+{% endblock %}

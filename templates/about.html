@@ -1,0 +1,397 @@
+{% extends "base.html" %}
+
+{% block title %}About - MediaDown{% endblock %}
+
+{% block bg_gradient %}linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%){% endblock %}
+{% block input_focus_color %}#667eea{% endblock %}
+{% block button_bg %}linear-gradient(135deg, #667eea 0%, #764ba2 100%){% endblock %}
+
+{% block extra_style %}
+<style>
+    .about-section {
+        margin-bottom: 40px;
+    }
+
+    .about-header {
+        text-align: center;
+        margin-bottom: 50px;
+    }
+
+    .about-header h1 {
+        font-size: 2.8em;
+        margin-bottom: 15px;
+        background: linear-gradient(135deg, #667eea, #764ba2, #f093fb);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .about-header .tagline {
+        font-size: 1.3em;
+        color: #94a3b8;
+        font-weight: 500;
+    }
+
+    .creator-card {
+        background: rgba(30, 41, 59, 0.4);
+        border: 1px solid rgba(102, 126, 234, 0.3);
+        border-radius: 20px;
+        padding: 40px;
+        margin-bottom: 30px;
+        display: flex;
+        align-items: center;
+        gap: 30px;
+        backdrop-filter: blur(10px);
+        transition: all 0.3s;
+    }
+
+    .creator-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 40px rgba(102, 126, 234, 0.3);
+        border-color: rgba(102, 126, 234, 0.5);
+    }
+
+    .creator-avatar {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 3em;
+        color: white;
+        flex-shrink: 0;
+        box-shadow: 0 0 30px rgba(102, 126, 234, 0.4);
+    }
+
+    .creator-info h2 {
+        font-size: 1.8em;
+        margin-bottom: 10px;
+        color: #f1f5f9;
+    }
+
+    .creator-info .role {
+        color: #667eea;
+        font-weight: 600;
+        margin-bottom: 15px;
+        font-size: 1.1em;
+    }
+
+    .creator-info p {
+        color: #cbd5e1;
+        line-height: 1.8;
+        margin-bottom: 20px;
+    }
+
+    .social-links {
+        display: flex;
+        gap: 15px;
+        flex-wrap: wrap;
+    }
+
+    .social-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 20px;
+        background: rgba(102, 126, 234, 0.1);
+        border: 1px solid rgba(102, 126, 234, 0.3);
+        border-radius: 10px;
+        color: #e2e8f0;
+        text-decoration: none;
+        transition: all 0.3s;
+        font-weight: 500;
+    }
+
+    .social-link:hover {
+        background: rgba(102, 126, 234, 0.2);
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+    }
+
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 25px;
+        margin-bottom: 40px;
+    }
+
+    .info-card {
+        background: rgba(30, 41, 59, 0.4);
+        border: 1px solid rgba(102, 126, 234, 0.2);
+        border-radius: 16px;
+        padding: 30px;
+        backdrop-filter: blur(10px);
+        transition: all 0.3s;
+    }
+
+    .info-card:hover {
+        transform: translateY(-5px);
+        border-color: rgba(102, 126, 234, 0.4);
+        box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
+    }
+
+    .info-card-icon {
+        width: 60px;
+        height: 60px;
+        background: linear-gradient(135deg, rgba(102, 126, 234, 0.2), rgba(118, 75, 162, 0.2));
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 20px;
+        font-size: 1.8em;
+        color: #667eea;
+    }
+
+    .info-card h3 {
+        font-size: 1.4em;
+        margin-bottom: 12px;
+        color: #f1f5f9;
+    }
+
+    .info-card p {
+        color: #cbd5e1;
+        line-height: 1.7;
+    }
+
+    .features-list {
+        list-style: none;
+        padding: 0;
+    }
+
+    .features-list li {
+        padding: 12px 0;
+        padding-left: 35px;
+        position: relative;
+        color: #cbd5e1;
+        line-height: 1.6;
+    }
+
+    .features-list li::before {
+        content: '✓';
+        position: absolute;
+        left: 0;
+        color: #667eea;
+        font-weight: bold;
+        font-size: 1.3em;
+    }
+
+    .tech-stack {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 20px;
+    }
+
+    .tech-badge {
+        padding: 8px 16px;
+        background: rgba(102, 126, 234, 0.1);
+        border: 1px solid rgba(102, 126, 234, 0.3);
+        border-radius: 8px;
+        color: #e2e8f0;
+        font-size: 0.9em;
+        font-weight: 500;
+    }
+
+    .cta-section {
+        text-align: center;
+        margin-top: 50px;
+        padding: 40px;
+        background: rgba(102, 126, 234, 0.05);
+        border: 1px solid rgba(102, 126, 234, 0.2);
+        border-radius: 20px;
+    }
+
+    .cta-section h2 {
+        font-size: 2em;
+        margin-bottom: 15px;
+        color: #f1f5f9;
+    }
+
+    .cta-section p {
+        color: #cbd5e1;
+        margin-bottom: 25px;
+        font-size: 1.1em;
+    }
+
+    .cta-button {
+        display: inline-block;
+        padding: 15px 40px;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        text-decoration: none;
+        border-radius: 12px;
+        font-weight: 700;
+        transition: all 0.3s;
+        font-size: 1.1em;
+    }
+
+    .cta-button:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+    }
+
+    @media (max-width: 768px) {
+        .creator-card {
+            flex-direction: column;
+            text-align: center;
+            padding: 30px 20px;
+        }
+
+        .creator-avatar {
+            width: 100px;
+            height: 100px;
+            font-size: 2.5em;
+        }
+
+        .social-links {
+            justify-content: center;
+        }
+
+        .about-header h1 {
+            font-size: 2em;
+        }
+
+        .info-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="about-section">
+    <div class="about-header">
+        <h1><i class="fas fa-info-circle"></i> Tentang MediaDown</h1>
+        <p class="tagline">Platform Download Media Modern</p>
+    </div>
+
+    <!-- Creator Section -->
+    <div class="creator-card">
+        <div class="creator-avatar">
+            <i class="fas fa-user-circle"></i>
+        </div>
+        <div class="creator-info">
+            <h2>Dibuat oleh 𝙍𝙖𝙢𝙙𝙖𝙣 𝙃𝙞𝙙𝙖𝙮𝙖𝙝</h2>
+            <div class="role">Full Stack Developer & Content Creator</div>
+            <p>
+                Developer yang berdedikasi untuk menciptakan tools yang mudah digunakan dan membuat konten digital lebih mudah diakses. 
+                MediaDown lahir dari kebutuhan akan solusi yang sederhana dan elegan untuk mengunduh media dari berbagai platform.
+            </p>
+            <div class="social-links">
+                <a href="#" class="social-link" target="_blank">
+                    <i class="fab fa-github"></i> GitHub
+                </a>
+                <a href="#" class="social-link" target="_blank">
+                    <i class="fab fa-linkedin"></i> LinkedIn
+                </a>
+                <a href="#" class="social-link" target="_blank">
+                    <i class="fab fa-twitter"></i> Twitter
+                </a>
+                <a href="mailto:ramdanhidayah67@gmail.com" class="social-link">
+                    <i class="fas fa-envelope"></i> Email
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Info Grid -->
+    <div class="info-grid">
+        <div class="info-card">
+            <div class="info-card-icon">
+                <i class="fas fa-rocket"></i>
+            </div>
+            <h3>Misi Kami</h3>
+            <p>
+                Menyediakan platform yang cepat, handal, dan mudah digunakan untuk mengunduh konten media dari platform media sosial populer, 
+                membuat konten digital lebih mudah diakses oleh semua orang.
+            </p>
+        </div>
+
+        <div class="info-card">
+            <div class="info-card-icon">
+                <i class="fas fa-shield-alt"></i>
+            </div>
+            <h3>Privasi & Keamanan</h3>
+            <p>
+                Kami mengutamakan privasi Anda. Tidak ada data yang disimpan di server kami, dan semua unduhan diproses dengan aman. 
+                Informasi dan unduhan Anda tetap sepenuhnya pribadi.
+            </p>
+        </div>
+
+        <div class="info-card">
+            <div class="info-card-icon">
+                <i class="fas fa-bolt"></i>
+            </div>
+            <h3>Cepat & Handal</h3>
+            <p>
+                Dibangun dengan teknologi web modern untuk memastikan performa yang sangat cepat dan unduhan yang handal setiap saat. 
+                Tidak perlu registrasi, cukup paste link dan download.
+            </p>
+        </div>
+    </div>
+
+    <!-- Features Section -->
+    <div class="info-card">
+        <div class="info-card-icon">
+            <i class="fas fa-star"></i>
+        </div>
+        <h3>Fitur Utama</h3>
+        <ul class="features-list">
+            <li>Mendukung berbagai platform: YouTube, TikTok, Facebook, Instagram, Twitter, dan Spotify</li>
+            <li>Download video dan audio berkualitas tinggi</li>
+            <li>Tanpa watermark pada konten yang diunduh</li>
+            <li>Kecepatan pemrosesan dan download yang cepat</li>
+            <li>Desain responsif yang ramah mobile</li>
+            <li>Tidak perlu registrasi atau login</li>
+            <li>Sepenuhnya gratis untuk digunakan</li>
+            <li>Update dan perbaikan secara berkala</li>
+        </ul>
+    </div>
+
+    <!-- Tech Stack -->
+    <div class="info-card" style="margin-top: 25px;">
+        <div class="info-card-icon">
+            <i class="fas fa-code"></i>
+        </div>
+        <h3>Teknologi yang Digunakan</h3>
+        <p style="margin-bottom: 15px;">Dibangun dengan teknologi modern dan terpercaya:</p>
+        <div class="tech-stack">
+            <span class="tech-badge"><i class="fab fa-python"></i> Python Flask</span>
+            <span class="tech-badge"><i class="fab fa-html5"></i> HTML5</span>
+            <span class="tech-badge"><i class="fab fa-css3-alt"></i> CSS3</span>
+            <span class="tech-badge"><i class="fab fa-js"></i> JavaScript</span>
+            <span class="tech-badge"><i class="fas fa-cloud"></i> Vercel</span>
+            <span class="tech-badge"><i class="fas fa-server"></i> REST API</span>
+        </div>
+    </div>
+
+    <!-- CTA Section -->
+    <div class="cta-section">
+        <h2>Mulai Download Sekarang!</h2>
+        <p>Pilih platform Anda dan mulai download konten favorit dalam hitungan detik.</p>
+        <a href="/" class="cta-button">
+            <i class="fas fa-arrow-right"></i> Mulai Sekarang
+        </a>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_script %}
+<script>
+    // Add smooth scroll behavior
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
+</script>
+{% endblock %}

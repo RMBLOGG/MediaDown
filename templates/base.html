@@ -1,1 +1,732 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}MediaDown - Modern Media Downloader{% endblock %}</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+                  -webkit-tap-highlight-color: transparent;
+            user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+        }
 
+        :root {
+            --sidebar-width: 280px;
+            --header-height: 70px;
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #8b5cf6;
+            --accent: #ec4899;
+            --dark: #0f172a;
+            --dark-light: #1e293b;
+            --bg-gradient: {% block bg_gradient %}linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #ec4899 100%){% endblock %};
+            --input-focus-color: {% block input_focus_color %}#6366f1{% endblock %};
+            --button-bg: {% block button_bg %}linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%){% endblock %};
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--dark);
+            color: #e2e8f0;
+            min-height: 100vh;
+            position: relative;
+        }
+        
+        /* Animated Background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(139, 92, 246, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 40% 20%, rgba(236, 72, 153, 0.1) 0%, transparent 50%);
+            animation: bgFloat 20s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        @keyframes bgFloat {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-20px) scale(1.05); }
+        }
+
+        /* Sidebar Futuristic */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: var(--sidebar-width);
+            height: 100vh;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(20px);
+            border-right: 1px solid rgba(99, 102, 241, 0.2);
+            box-shadow: 0 0 40px rgba(99, 102, 241, 0.1);
+            z-index: 1000;
+            transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            overflow-y: auto;
+        }
+
+        .sidebar::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, var(--primary), var(--secondary));
+            border-radius: 3px;
+        }
+
+        .logo-section {
+            padding: 25px 20px;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
+            border-bottom: 1px solid rgba(99, 102, 241, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .logo-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.1) 0%, transparent 70%);
+            animation: logoGlow 10s linear infinite;
+        }
+        
+        @keyframes logoGlow {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: white;
+            font-size: 1.5em;
+            font-weight: 800;
+            text-decoration: none;
+            position: relative;
+            z-index: 1;
+        }
+
+        .logo i {
+            font-size: 1.3em;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 10px rgba(99, 102, 241, 0.5));
+        }
+
+        .nav-menu {
+            padding: 20px 0;
+        }
+
+        .nav-section-title {
+            color: rgba(226, 232, 240, 0.4);
+            font-size: 0.7em;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            padding: 20px 20px 10px 20px;
+        }
+
+        .nav-item {
+            position: relative;
+            margin: 5px 12px;
+            border-radius: 12px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 14px 18px;
+            color: rgba(226, 232, 240, 0.7);
+            text-decoration: none;
+            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            position: relative;
+            font-weight: 500;
+            border-radius: 12px;
+        }
+        
+        .nav-link::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.1));
+            opacity: 0;
+            transition: opacity 0.3s;
+            border-radius: 12px;
+        }
+
+        .nav-link:hover::before {
+            opacity: 1;
+        }
+
+        .nav-link:hover {
+            color: white;
+            transform: translateX(8px);
+        }
+
+        .nav-link.active {
+            color: white;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(139, 92, 246, 0.2));
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.3);
+        }
+
+        .nav-link.active::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 4px;
+            height: 60%;
+            background: linear-gradient(180deg, var(--primary), var(--accent));
+            border-radius: 0 2px 2px 0;
+            box-shadow: 0 0 10px var(--primary);
+        }
+
+        .nav-icon {
+            width: 24px;
+            text-align: center;
+            font-size: 1.2em;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            transition: margin-left 0.3s ease;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Header Futuristic */
+        .header {
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(20px);
+            height: var(--header-height);
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            border-bottom: 1px solid rgba(99, 102, 241, 0.2);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-title {
+            font-size: 1.4em;
+            font-weight: 800;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6, #ec4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            white-space: nowrap;
+            pointer-events: none;
+            filter: drop-shadow(0 0 20px rgba(99, 102, 241, 0.3));
+        }
+
+        .menu-toggle {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(139, 92, 246, 0.2));
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: 12px;
+            cursor: pointer;
+            padding: 10px;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            width: 40px;
+            height: 40px;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+        
+        .menu-toggle:hover {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.3), rgba(139, 92, 246, 0.3));
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.4);
+        }
+        
+        .menu-toggle span {
+            display: block;
+            width: 22px;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 30px;
+        }
+
+        .card {
+            background: rgba(30, 41, 59, 0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 24px;
+            padding: 50px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--primary), transparent);
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            color: #f1f5f9;
+            font-weight: 800;
+        }
+
+        .subtitle {
+            color: #94a3b8;
+            font-size: 1.1em;
+            margin-bottom: 30px;
+        }
+
+        /* Form Elements Futuristic */
+        .input-group {
+            margin-bottom: 25px;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            color: #e2e8f0;
+            font-weight: 600;
+            font-size: 0.95em;
+        }
+
+        input[type="text"],
+        select {
+            width: 100%;
+            padding: 16px 20px;
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: 12px;
+            font-size: 16px;
+            color: #e2e8f0;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+
+        input[type="text"]:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.2), 0 0 20px rgba(99, 102, 241, 0.3);
+            background: rgba(15, 23, 42, 0.8);
+        }
+        
+        input[type="text"]::placeholder {
+            color: #64748b;
+        }
+
+        button[type="submit"],
+        .btn-primary,
+        button {
+            width: 100%;
+            padding: 16px;
+            background: var(--button-bg);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            position: relative;
+            overflow: hidden;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+        
+        button:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        button:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.4), 0 0 40px rgba(99, 102, 241, 0.2);
+        }
+
+        button:disabled {
+            background: rgba(100, 116, 139, 0.3);
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Loader Futuristic */
+        .loader {
+            width: 60px;
+            height: 60px;
+            margin: 30px auto;
+            display: none;
+            position: relative;
+        }
+        
+        .loader::before,
+        .loader::after {
+            content: '';
+            position: absolute;
+            border-radius: 50%;
+        }
+        
+        .loader::before {
+            width: 60px;
+            height: 60px;
+            border: 4px solid transparent;
+            border-top-color: var(--primary);
+            border-right-color: var(--secondary);
+            animation: spin 1s linear infinite;
+        }
+        
+        .loader::after {
+            width: 40px;
+            height: 40px;
+            top: 10px;
+            left: 10px;
+            border: 4px solid transparent;
+            border-bottom-color: var(--accent);
+            border-left-color: var(--secondary);
+            animation: spin 0.7s linear infinite reverse;
+        }
+
+        .loader.show {
+            display: block;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Messages Futuristic */
+        .error, .warning, .success {
+            padding: 16px 20px;
+            border-radius: 12px;
+            margin-top: 20px;
+            display: none;
+            font-weight: 500;
+            text-align: left;
+            border-left: 4px solid;
+            backdrop-filter: blur(10px);
+        }
+
+        .error {
+            background: rgba(239, 68, 68, 0.1);
+            color: #fca5a5;
+            border-left-color: #ef4444;
+        }
+
+        .warning {
+            background: rgba(245, 158, 11, 0.1);
+            color: #fcd34d;
+            border-left-color: #f59e0b;
+        }
+
+        .success {
+            background: rgba(34, 197, 94, 0.1);
+            color: #86efac;
+            border-left-color: #22c55e;
+        }
+
+        .error.show, .warning.show, .success.show {
+            display: block;
+            animation: slideIn 0.3s ease;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Result Box */
+        .result {
+            margin-top: 30px;
+            padding: 25px;
+            background: rgba(30, 41, 59, 0.4);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 16px;
+            display: none;
+            text-align: left;
+            backdrop-filter: blur(10px);
+        }
+
+        .result.show {
+            display: block;
+            animation: slideIn 0.5s ease;
+        }
+
+        .download-btn {
+            display: block;
+            padding: 16px 20px;
+            background: var(--button-bg);
+            color: white;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 700;
+            text-align: center;
+            transition: all 0.3s;
+            margin-top: 10px;
+            border: 1px solid rgba(99, 102, 241, 0.3);
+        }
+
+        .download-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.4);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .card {
+                padding: 30px;
+            }
+            
+            .header-title {
+                font-size: 1.3em;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 20px;
+            }
+
+            h1 {
+                font-size: 2em;
+                flex-direction: column;
+            }
+            
+            .header {
+                padding: 0 15px;
+            }
+            
+            .header-title {
+                font-size: 1.2em;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .header-title {
+                font-size: 1.1em;
+            }
+            
+            .card {
+                padding: 20px;
+            }
+        }
+
+        /* Overlay */
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            z-index: 999;
+        }
+
+        .overlay.active {
+            display: block;
+        }
+
+        {% block extra_style %}{% endblock %}
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="logo-section">
+            <a href="/" class="logo">
+                <i class="fas fa-cloud-download-alt"></i>
+                <span>MediaDown</span>
+            </a>
+        </div>
+
+        <nav class="nav-menu">
+            <div class="nav-section-title">Main Menu</div>
+            <div class="nav-item">
+                <a href="/" class="nav-link {% if request.endpoint == 'index' %}active{% endif %}">
+                    <span class="nav-icon"><i class="fas fa-home"></i></span>
+                    <span>Home</span>
+                </a>
+            </div>
+            
+            <div class="nav-item">
+    <a href="/about" class="nav-link {% if request.endpoint == 'about' %}active{% endif %}">
+        <span class="nav-icon"><i class="fas fa-info-circle"></i></span>
+        <span>About</span>
+    </a>
+</div>
+
+            <div class="nav-section-title">Platforms</div>
+            <div class="nav-item">
+                <a href="/youtube" class="nav-link {% if request.endpoint == 'youtube' %}active{% endif %}">
+                    <span class="nav-icon"><i class="fab fa-youtube"></i></span>
+                    <span>YouTube</span>
+                </a>
+            </div>
+            <div class="nav-item">
+                <a href="/tiktok" class="nav-link {% if request.endpoint == 'tiktok' %}active{% endif %}">
+                    <span class="nav-icon"><i class="fab fa-tiktok"></i></span>
+                    <span>TikTok</span>
+                </a>
+            </div>
+            <div class="nav-item">
+                <a href="/facebook" class="nav-link {% if request.endpoint == 'facebook' %}active{% endif %}">
+                    <span class="nav-icon"><i class="fab fa-facebook"></i></span>
+                    <span>Facebook</span>
+                </a>
+            </div>
+            <div class="nav-item">
+                <a href="/instagram" class="nav-link {% if request.endpoint == 'instagram' %}active{% endif %}">
+                    <span class="nav-icon"><i class="fab fa-instagram"></i></span>
+                    <span>Instagram</span>
+                </a>
+            </div>
+            <div class="nav-item">
+                <a href="/twitter" class="nav-link {% if request.endpoint == 'twitter' %}active{% endif %}">
+                    <span class="nav-icon"><i class="fab fa-twitter"></i></span>
+                    <span>Twitter/X</span>
+                </a>
+            </div>
+            <div class="nav-item">
+                <a href="/spotify" class="nav-link {% if request.endpoint == 'spotify' %}active{% endif %}">
+                    <span class="nav-icon"><i class="fab fa-spotify"></i></span>
+                    <span>Spotify</span>
+                </a>
+            </div>
+        </nav>
+    </div>
+
+    <!-- Overlay -->
+    <div class="overlay" id="overlay"></div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <header class="header">
+            <button class="menu-toggle" id="menuToggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <h1 class="header-title">MediaDown</h1>
+        </header>
+
+        <div class="container">
+            <div class="card">
+                {% block content %}
+                <!-- Content from child templates will be inserted here -->
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Mobile menu toggle
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+        const menuToggle = document.getElementById('menuToggle');
+
+        menuToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+        });
+
+        overlay.addEventListener('click', () => {
+            sidebar.classList.remove('active');
+            overlay.classList.remove('active');
+        });
+
+        // Close sidebar when clicking nav link on mobile
+        const navLinks = document.querySelectorAll('.nav-link');
+        navLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                if (window.innerWidth <= 1024) {
+                    sidebar.classList.remove('active');
+                    overlay.classList.remove('active');
+                }
+            });
+        });
+    </script>
+
+    {% block extra_script %}{% endblock %}
+</body>
+</html>

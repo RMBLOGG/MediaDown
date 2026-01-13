@@ -1,0 +1,304 @@
+<!-- templates/tiktok.html -->
+{% extends "base.html" %}
+
+{% block title %}TikTok Downloader{% endblock %}
+
+{% block bg_gradient %}linear-gradient(135deg, #ee0979 0%, #ff6a00 100%){% endblock %}
+{% block input_focus_color %}#fe2c55{% endblock %}
+{% block button_bg %}linear-gradient(135deg, #fe2c55 0%, #ff6a00 100%){% endblock %}
+
+{% block content %}
+<div class="platform-header">
+    <div class="platform-icon-large">
+        <i class="fab fa-tiktok"></i>
+        <div class="icon-glow-pink"></div>
+    </div>
+    <h1><i class="fab fa-tiktok"></i> TikTok Downloader</h1>
+    <p class="subtitle">Download video TikTok tanpa watermark</p>
+</div>
+
+<form id="downloadForm" class="download-interface">
+    <div class="input-group">
+        <label for="videoUrl"><i class="fas fa-link"></i> URL TikTok</label>
+        <input type="text" id="videoUrl" placeholder="https://www.tiktok.com/@username/video/..." required>
+    </div>
+    <button type="submit" id="submitBtn" class="submit-btn">
+        <i class="fas fa-download"></i>
+        <span>Download Video</span>
+    </button>
+</form>
+
+<div class="loader" id="loader"></div>
+<div class="error" id="error"></div>
+<div class="result" id="result"></div>
+
+<div class="tips-box">
+    <div class="tips-header">
+        <i class="fas fa-lightbulb"></i>
+        <h3>Quick Guide</h3>
+    </div>
+    <ul class="tips-list">
+        <li><i class="fas fa-check-circle"></i> Buka aplikasi TikTok</li>
+        <li><i class="fas fa-check-circle"></i> Pilih video yang ingin didownload</li>
+        <li><i class="fas fa-check-circle"></i> Klik tombol Share</li>
+        <li><i class="fas fa-check-circle"></i> Copy link dan paste di atas</li>
+    </ul>
+</div>
+{% endblock %}
+
+{% block extra_style %}
+<style>
+    .platform-header {
+        text-align: center;
+        margin-bottom: 40px;
+    }
+    
+    .platform-icon-large {
+        position: relative;
+        display: inline-block;
+        margin-bottom: 20px;
+    }
+    
+    .platform-icon-large i {
+        font-size: 5em;
+        color: #fe2c55;
+        filter: drop-shadow(0 0 20px rgba(254, 44, 85, 0.5));
+        animation: iconFloat 3s ease-in-out infinite;
+    }
+    
+    .icon-glow-pink {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 100px;
+        height: 100px;
+        background: radial-gradient(circle, rgba(254, 44, 85, 0.3), transparent);
+        border-radius: 50%;
+        animation: pulse 2s infinite;
+    }
+    
+    @keyframes iconFloat {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-10px); }
+    }
+    
+    .download-interface {
+        margin-bottom: 40px;
+    }
+    
+    .submit-btn {
+        width: 100%;
+        padding: 18px;
+        background: linear-gradient(135deg, #fe2c55 0%, #ff6a00 100%);
+        border: 1px solid rgba(254, 44, 85, 0.3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        font-size: 1.1em;
+    }
+    
+    .submit-btn:hover {
+        box-shadow: 0 0 30px rgba(254, 44, 85, 0.4);
+    }
+    
+    .tips-box {
+        background: rgba(30, 41, 59, 0.4);
+        border: 1px solid rgba(99, 102, 241, 0.2);
+        border-radius: 20px;
+        padding: 30px;
+    }
+    
+    .tips-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 20px;
+    }
+    
+    .tips-header i {
+        font-size: 1.8em;
+        color: #fbbf24;
+    }
+    
+    .tips-header h3 {
+        font-size: 1.3em;
+        color: #f1f5f9;
+        margin: 0;
+    }
+    
+    .tips-list {
+        list-style: none;
+        padding: 0;
+    }
+    
+    .tips-list li {
+        padding: 12px 0;
+        color: #94a3b8;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+    
+    .tips-list i {
+        color: #10b981;
+        font-size: 1.1em;
+    }
+    
+    @media (max-width: 768px) {
+        .platform-icon-large i {
+            font-size: 4em;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block extra_script %}
+<script>
+const form = document.getElementById('downloadForm');
+const loader = document.getElementById('loader');
+const error = document.getElementById('error');
+const result = document.getElementById('result');
+const submitBtn = document.getElementById('submitBtn');
+
+form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const url = document.getElementById('videoUrl').value;
+    
+    loader.classList.add('show');
+    error.classList.remove('show');
+    result.classList.remove('show');
+    submitBtn.disabled = true;
+
+    try {
+        const response = await fetch('/api/download/tiktok', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ url })
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+            displayResult(data.result);
+        } else {
+            showError(data.message || 'Gagal mengambil video');
+        }
+    } catch (err) {
+        showError('Terjadi kesalahan: ' + err.message);
+    } finally {
+        loader.classList.remove('show');
+        submitBtn.disabled = false;
+    }
+});
+
+function displayResult(data) {
+    let html = '';
+    
+    // Video Cover/Thumbnail
+    if (data.cover) {
+        html += `
+            <div style="margin-bottom: 25px;">
+                <img src="${data.cover}" style="width: 100%; border-radius: 16px; box-shadow: 0 10px 30px rgba(254, 44, 85, 0.3);">
+            </div>
+        `;
+    }
+    
+    // Video Title
+    if (data.title) {
+        html += `
+            <h3 style="color: #f1f5f9; margin-bottom: 20px; font-size: 1.2em; text-align: center;">
+                ${data.title}
+            </h3>
+        `;
+    }
+    
+    // Author Info
+    if (data.author) {
+        html += `
+            <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px; padding: 20px; background: rgba(30, 41, 59, 0.4); border: 1px solid rgba(254, 44, 85, 0.3); border-radius: 16px;">
+                <img src="${data.author.avatar}" style="width: 60px; height: 60px; border-radius: 50%; border: 3px solid #fe2c55; box-shadow: 0 0 20px rgba(254, 44, 85, 0.4);">
+                <div style="flex: 1;">
+                    <div style="font-weight: 700; color: #f1f5f9; font-size: 1.1em; margin-bottom: 4px;">${data.author.nickname}</div>
+                    <div style="color: #94a3b8; font-size: 0.9em;">@${data.author.unique_id}</div>
+                </div>
+            </div>
+        `;
+    }
+    
+    // Stats
+    if (data.stats) {
+        html += `
+            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 25px;">
+                <div style="padding: 15px; background: rgba(30, 41, 59, 0.4); border: 1px solid rgba(99, 102, 241, 0.2); border-radius: 12px; text-align: center;">
+                    <div style="color: #94a3b8; font-size: 0.85em; margin-bottom: 5px;">
+                        <i class="fas fa-eye"></i> Views
+                    </div>
+                    <div style="color: #fe2c55; font-size: 1.3em; font-weight: 700;">${formatNum(data.stats.plays)}</div>
+                </div>
+                <div style="padding: 15px; background: rgba(30, 41, 59, 0.4); border: 1px solid rgba(99, 102, 241, 0.2); border-radius: 12px; text-align: center;">
+                    <div style="color: #94a3b8; font-size: 0.85em; margin-bottom: 5px;">
+                        <i class="fas fa-heart"></i> Likes
+                    </div>
+                    <div style="color: #fe2c55; font-size: 1.3em; font-weight: 700;">${formatNum(data.stats.likes)}</div>
+                </div>
+                <div style="padding: 15px; background: rgba(30, 41, 59, 0.4); border: 1px solid rgba(99, 102, 241, 0.2); border-radius: 12px; text-align: center;">
+                    <div style="color: #94a3b8; font-size: 0.85em; margin-bottom: 5px;">
+                        <i class="fas fa-comment"></i> Comments
+                    </div>
+                    <div style="color: #fe2c55; font-size: 1.3em; font-weight: 700;">${formatNum(data.stats.comments)}</div>
+                </div>
+                <div style="padding: 15px; background: rgba(30, 41, 59, 0.4); border: 1px solid rgba(99, 102, 241, 0.2); border-radius: 12px; text-align: center;">
+                    <div style="color: #94a3b8; font-size: 0.85em; margin-bottom: 5px;">
+                        <i class="fas fa-share"></i> Shares
+                    </div>
+                    <div style="color: #fe2c55; font-size: 1.3em; font-weight: 700;">${formatNum(data.stats.shares)}</div>
+                </div>
+            </div>
+        `;
+    }
+    
+    // Download Buttons
+    html += '<div style="display: flex; flex-direction: column; gap: 12px;">';
+    
+    if (data.video_nowm) {
+        html += `
+            <a href="${data.video_nowm}" class="download-btn" download style="background: linear-gradient(135deg, #fe2c55 0%, #ff6a00 100%); display: flex; align-items: center; justify-content: center; gap: 10px;">
+                <i class="fas fa-download"></i>
+                <span>Download (No Watermark)</span>
+            </a>
+        `;
+    }
+    
+    if (data.video_wm) {
+        html += `
+            <a href="${data.video_wm}" class="download-btn" download style="background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%); display: flex; align-items: center; justify-content: center; gap: 10px;">
+                <i class="fas fa-download"></i>
+                <span>Download (With Watermark)</span>
+            </a>
+        `;
+    }
+    
+    if (data.audio_url) {
+        html += `
+            <a href="${data.audio_url}" class="download-btn" download style="background: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%); display: flex; align-items: center; justify-content: center; gap: 10px;">
+                <i class="fas fa-music"></i>
+                <span>Download Audio</span>
+            </a>
+        `;
+    }
+    
+    html += '</div>';
+    
+    result.innerHTML = html;
+    result.classList.add('show');
+}
+
+function formatNum(num) {
+    if (num >= 1000000) return (num/1000000).toFixed(1) + 'M';
+    if (num >= 1000) return (num/1000).toFixed(1) + 'K';
+    return num;
+}
+</script>
+{% endblock %}

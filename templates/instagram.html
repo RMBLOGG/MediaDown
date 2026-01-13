@@ -1,0 +1,272 @@
+<!-- templates/instagram.html -->
+{% extends "base.html" %}
+
+{% block title %}Instagram Downloader{% endblock %}
+
+{% block bg_gradient %}linear-gradient(135deg, #833ab4 0%, #fd1d1d 50%, #fcb045 100%){% endblock %}
+{% block input_focus_color %}#833ab4{% endblock %}
+{% block button_bg %}linear-gradient(135deg, #833ab4 0%, #fd1d1d 50%, #fcb045 100%){% endblock %}
+
+{% block content %}
+<div class="platform-header">
+    <div class="platform-icon-large">
+        <i class="fab fa-instagram"></i>
+        <div class="icon-glow-gradient"></div>
+    </div>
+    <h1><i class="fab fa-instagram"></i> Instagram Downloader</h1>
+    <p class="subtitle">Download video & foto Instagram</p>
+</div>
+
+<form id="downloadForm" class="download-interface">
+    <div class="input-group">
+        <label for="videoUrl"><i class="fas fa-link"></i> URL Instagram</label>
+        <input type="text" id="videoUrl" placeholder="https://www.instagram.com/p/..." required>
+    </div>
+    <button type="submit" id="submitBtn" class="submit-btn">
+        <i class="fas fa-download"></i>
+        <span>Download Media</span>
+    </button>
+</form>
+
+<div class="loader" id="loader"></div>
+<div class="error" id="error"></div>
+<div class="result" id="result"></div>
+
+<div class="tips-box">
+    <div class="tips-header">
+        <i class="fas fa-lightbulb"></i>
+        <h3>Quick Guide</h3>
+    </div>
+    <ul class="tips-list">
+        <li><i class="fas fa-check-circle"></i> Buka aplikasi Instagram</li>
+        <li><i class="fas fa-check-circle"></i> Pilih post yang ingin didownload</li>
+        <li><i class="fas fa-check-circle"></i> Klik tombol titik tiga (•••)</li>
+        <li><i class="fas fa-check-circle"></i> Copy link dan paste di atas</li>
+    </ul>
+</div>
+{% endblock %}
+
+{% block extra_style %}
+<style>
+    .platform-header {
+        text-align: center;
+        margin-bottom: 40px;
+    }
+    
+    .platform-icon-large {
+        position: relative;
+        display: inline-block;
+        margin-bottom: 20px;
+    }
+    
+    .platform-icon-large i {
+        font-size: 5em;
+        background: linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        filter: drop-shadow(0 0 20px rgba(131, 58, 180, 0.5));
+        animation: iconFloat 3s ease-in-out infinite;
+    }
+    
+    .icon-glow-gradient {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 100px;
+        height: 100px;
+        background: radial-gradient(circle, rgba(131, 58, 180, 0.3), transparent);
+        border-radius: 50%;
+        animation: pulse 2s infinite;
+    }
+    
+    @keyframes iconFloat {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-10px); }
+    }
+    
+    .download-interface {
+        margin-bottom: 40px;
+    }
+    
+    .submit-btn {
+        width: 100%;
+        padding: 18px;
+        background: linear-gradient(135deg, #833ab4 0%, #fd1d1d 50%, #fcb045 100%);
+        border: 1px solid rgba(131, 58, 180, 0.3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        font-size: 1.1em;
+    }
+    
+    .submit-btn:hover {
+        box-shadow: 0 0 30px rgba(131, 58, 180, 0.4);
+    }
+    
+    .tips-box {
+        background: rgba(30, 41, 59, 0.4);
+        border: 1px solid rgba(99, 102, 241, 0.2);
+        border-radius: 20px;
+        padding: 30px;
+    }
+    
+    .tips-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 20px;
+    }
+    
+    .tips-header i {
+        font-size: 1.8em;
+        color: #fbbf24;
+    }
+    
+    .tips-header h3 {
+        font-size: 1.3em;
+        color: #f1f5f9;
+        margin: 0;
+    }
+    
+    .tips-list {
+        list-style: none;
+        padding: 0;
+    }
+    
+    .tips-list li {
+        padding: 12px 0;
+        color: #94a3b8;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+    
+    .tips-list i {
+        color: #10b981;
+        font-size: 1.1em;
+    }
+    
+    @media (max-width: 768px) {
+        .platform-icon-large i {
+            font-size: 4em;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block extra_script %}
+<script>
+const form = document.getElementById('downloadForm');
+const loader = document.getElementById('loader');
+const error = document.getElementById('error');
+const result = document.getElementById('result');
+const submitBtn = document.getElementById('submitBtn');
+
+form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const url = document.getElementById('videoUrl').value;
+    
+    loader.classList.add('show');
+    error.classList.remove('show');
+    result.classList.remove('show');
+    submitBtn.disabled = true;
+
+    try {
+        const response = await fetch('/api/download/instagram', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ url })
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+            displayResult(data.result);
+        } else {
+            showError(data.message || 'Gagal mengambil media');
+        }
+    } catch (err) {
+        showError('Terjadi kesalahan: ' + err.message);
+    } finally {
+        loader.classList.remove('show');
+        submitBtn.disabled = false;
+    }
+});
+
+function displayResult(data) {
+    let html = '';
+    
+    // User Info Header
+    html += `
+        <div style="padding: 20px; background: rgba(30, 41, 59, 0.4); border: 1px solid rgba(131, 58, 180, 0.3); border-radius: 16px; margin-bottom: 25px;">
+            <h3 style="color: #f1f5f9; margin-bottom: 10px; display: flex; align-items: center; gap: 10px;">
+                <i class="fab fa-instagram"></i> @${data.username || 'Instagram User'}
+            </h3>
+            <p style="color: #94a3b8;">
+                <i class="fas fa-${data.type === 'video' ? 'video' : 'image'}"></i> 
+                Tipe: <strong>${data.type === 'video' ? 'Video' : 'Foto'}</strong>
+            </p>
+        </div>
+    `;
+    
+    // Download Buttons
+    html += '<div style="display: flex; flex-direction: column; gap: 12px;">';
+    
+    // Video
+    if (data.type === 'video' && data.video_url) {
+        html += `
+            <a href="${data.video_url}" class="download-btn" download style="background: linear-gradient(135deg, #833ab4 0%, #fd1d1d 50%, #fcb045 100%); display: flex; align-items: center; justify-content: space-between; padding: 20px;">
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <i class="fas fa-video" style="font-size: 2em;"></i>
+                    <div style="text-align: left;">
+                        <div style="font-weight: 700; font-size: 1.1em;">Download Video</div>
+                        <div style="font-size: 0.85em; opacity: 0.9;">Kualitas Original</div>
+                    </div>
+                </div>
+                <i class="fas fa-download"></i>
+            </a>
+        `;
+    }
+    
+    // Images
+    if (data.images && data.images.length > 0) {
+        html += `
+            <div style="padding: 20px; background: rgba(30, 41, 59, 0.4); border: 1px solid rgba(99, 102, 241, 0.2); border-radius: 16px;">
+                <h4 style="color: #f1f5f9; margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-images"></i> Foto-foto
+                </h4>
+                <div style="display: flex; flex-direction: column; gap: 10px;">
+        `;
+        
+        data.images.forEach((img, index) => {
+            html += `
+                <a href="${img}" class="download-btn" download style="background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%); display: flex; align-items: center; justify-content: space-between; padding: 15px;">
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <i class="fas fa-image" style="font-size: 1.5em;"></i>
+                        <span style="font-weight: 600;">Foto ${index + 1}</span>
+                    </div>
+                    <i class="fas fa-download"></i>
+                </a>
+            `;
+        });
+        
+        html += `
+                </div>
+            </div>
+        `;
+    }
+    
+    html += '</div>';
+    
+    result.innerHTML = html;
+    result.classList.add('show');
+}
+
+function showError(msg) {
+    error.textContent = '❌ ' + msg;
+    error.classList.add('show');
+}
+</script>
+{% endblock %}

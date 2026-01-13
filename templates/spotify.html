@@ -1,0 +1,259 @@
+<!-- templates/spotify.html -->
+{% extends "base.html" %}
+
+{% block title %}Spotify Info{% endblock %}
+
+{% block bg_gradient %}linear-gradient(135deg, #1db954 0%, #1ed760 100%){% endblock %}
+{% block input_focus_color %}#1db954{% endblock %}
+{% block button_bg %}linear-gradient(135deg, #1db954 0%, #1ed760 100%){% endblock %}
+
+{% block content %}
+<div class="platform-header">
+    <div class="platform-icon-large">
+        <i class="fab fa-spotify"></i>
+        <div class="icon-glow-green"></div>
+    </div>
+    <h1><i class="fab fa-spotify"></i> Spotify Info</h1>
+    <p class="subtitle">Dapatkan informasi lagu dari Spotify</p>
+</div>
+
+<div class="download-interface">
+    <div class="input-group">
+        <label for="spotifyUrl"><i class="fas fa-link"></i> URL Spotify</label>
+        <input type="text" id="spotifyUrl" placeholder="https://open.spotify.com/track/..." />
+    </div>
+    <button id="downloadBtn" onclick="getSpotifyInfo()" class="submit-btn">
+        <i class="fas fa-search"></i>
+        <span>Get Track Info</span>
+    </button>
+</div>
+
+<div class="loader" id="loader"></div>
+<div class="error" id="error"></div>
+<div class="result" id="result"></div>
+
+<div class="tips-box">
+    <div class="tips-header">
+        <i class="fas fa-lightbulb"></i>
+        <h3>Quick Guide</h3>
+    </div>
+    <ul class="tips-list">
+        <li><i class="fas fa-check-circle"></i> Buka aplikasi Spotify</li>
+        <li><i class="fas fa-check-circle"></i> Cari lagu yang diinginkan</li>
+        <li><i class="fas fa-check-circle"></i> Klik tombol Share (•••)</li>
+        <li><i class="fas fa-check-circle"></i> Copy Song Link dan paste di atas</li>
+    </ul>
+    <div class="tips-note">
+        <i class="fas fa-info-circle"></i>
+        Fitur ini hanya menampilkan informasi lagu
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_style %}
+<style>
+    .platform-header {
+        text-align: center;
+        margin-bottom: 40px;
+    }
+    
+    .platform-icon-large {
+        position: relative;
+        display: inline-block;
+        margin-bottom: 20px;
+    }
+    
+    .platform-icon-large i {
+        font-size: 5em;
+        color: #1db954;
+        filter: drop-shadow(0 0 20px rgba(29, 185, 84, 0.5));
+        animation: iconFloat 3s ease-in-out infinite;
+    }
+    
+    .icon-glow-green {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 100px;
+        height: 100px;
+        background: radial-gradient(circle, rgba(29, 185, 84, 0.3), transparent);
+        border-radius: 50%;
+        animation: pulse 2s infinite;
+    }
+    
+    @keyframes iconFloat {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-10px); }
+    }
+    
+    .download-interface {
+        margin-bottom: 40px;
+    }
+    
+    .submit-btn {
+        width: 100%;
+        padding: 18px;
+        background: linear-gradient(135deg, #1db954 0%, #1ed760 100%);
+        border: 1px solid rgba(29, 185, 84, 0.3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        font-size: 1.1em;
+    }
+    
+    .submit-btn:hover {
+        box-shadow: 0 0 30px rgba(29, 185, 84, 0.4);
+    }
+    
+    .tips-box {
+        background: rgba(30, 41, 59, 0.4);
+        border: 1px solid rgba(99, 102, 241, 0.2);
+        border-radius: 20px;
+        padding: 30px;
+    }
+    
+    .tips-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 20px;
+    }
+    
+    .tips-header i {
+        font-size: 1.8em;
+        color: #fbbf24;
+    }
+    
+    .tips-header h3 {
+        font-size: 1.3em;
+        color: #f1f5f9;
+        margin: 0;
+    }
+    
+    .tips-list {
+        list-style: none;
+        padding: 0;
+        margin-bottom: 20px;
+    }
+    
+    .tips-list li {
+        padding: 12px 0;
+        color: #94a3b8;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+    
+    .tips-list i {
+        color: #10b981;
+        font-size: 1.1em;
+    }
+    
+    .tips-note {
+        background: rgba(29, 185, 84, 0.1);
+        border-left: 3px solid #1db954;
+        padding: 15px;
+        border-radius: 8px;
+        color: #1db954;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .tips-note i {
+        font-size: 1.2em;
+    }
+    
+    @media (max-width: 768px) {
+        .platform-icon-large i {
+            font-size: 4em;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block extra_script %}
+<script>
+    async function getSpotifyInfo() {
+        const url = document.getElementById('spotifyUrl').value.trim();
+        const btn = document.getElementById('downloadBtn');
+        const loader = document.getElementById('loader');
+        const error = document.getElementById('error');
+        const result = document.getElementById('result');
+        
+        error.classList.remove('show');
+        result.classList.remove('show');
+        
+        if (!url) {
+            error.textContent = '⚠️ Mohon masukkan URL Spotify!';
+            error.classList.add('show');
+            return;
+        }
+        
+        if (!url.includes('open.spotify.com/track/')) {
+            error.textContent = '⚠️ URL Spotify tidak valid!';
+            error.classList.add('show');
+            return;
+        }
+        
+        btn.disabled = true;
+        loader.classList.add('show');
+        
+        try {
+            const response = await fetch('/api/download/spotify', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ url: url })
+            });
+            
+            const data = await response.json();
+            
+            if (data.success) {
+                const track = data.result;
+                
+                result.innerHTML = `
+                    <div style="text-align: center; margin-bottom: 25px;">
+                        <i class="fas fa-check-circle" style="font-size: 3em; color: #10b981; margin-bottom: 15px;"></i>
+                        <h3 style="color: #f1f5f9; margin-bottom: 10px;">Track Info Retrieved!</h3>
+                    </div>
+                    
+                    <div style="display: flex; gap: 20px; align-items: flex-start; margin-bottom: 20px; padding: 25px; background: rgba(30, 41, 59, 0.4); border: 1px solid rgba(29, 185, 84, 0.3); border-radius: 16px;">
+                        <img src="${track.cover}" alt="${track.title}" style="width: 140px; height: 140px; border-radius: 12px; box-shadow: 0 8px 20px rgba(29, 185, 84, 0.4); flex-shrink: 0;">
+                        <div style="flex: 1;">
+                            <h3 style="color: #f1f5f9; margin-bottom: 12px; font-size: 1.4em;">${track.title}</h3>
+                            <p style="color: #94a3b8; margin-bottom: 10px; display: flex; align-items: center; gap: 8px;">
+                                <i class="fas fa-user-circle"></i> ${track.artist}
+                            </p>
+                            <p style="color: #94a3b8; display: flex; align-items: center; gap: 8px;">
+                                <i class="fas fa-clock"></i> ${track.duration}
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <a href="${track.url}" target="_blank" class="download-btn" style="background: linear-gradient(135deg, #1db954 0%, #1ed760 100%); display: flex; align-items: center; justify-content: center; gap: 12px; padding: 18px;">
+                        <i class="fab fa-spotify" style="font-size: 1.5em;"></i>
+                        <span style="font-size: 1.1em; font-weight: 700;">Open in Spotify</span>
+                    </a>
+                `;
+                
+                result.classList.add('show');
+            } else {
+                error.textContent = '❌ ' + data.message;
+                error.classList.add('show');
+            }
+        } catch (err) {
+            error.textContent = '❌ Terjadi kesalahan: ' + err.message;
+            error.classList.add('show');
+        } finally {
+            btn.disabled = false;
+            loader.classList.remove('show');
+        }
+    }
+    
+    document.getElementById('spotifyUrl').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') getSpotifyInfo();
+    });
+</script>
+{% endblock %}
